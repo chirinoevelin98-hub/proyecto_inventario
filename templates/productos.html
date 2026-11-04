@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="panel">
+    <h2>Registrar producto</h2>
+    <form method="post">
+      <input type="hidden" name="tipo" value="producto" />
+
+      <div class="form-grid">
+        <label>
+          Nombre
+          <input type="text" name="nombre" required />
+        </label>
+
+        <label>
+          Categoría
+          <select name="categoria" required>
+            <option value="">Selecciona</option>
+            <option value="Ropa">Ropa</option>
+            <option value="Calzado">Calzado</option>
+            <option value="Accesorio">Accesorio</option>
+          </select>
+        </label>
+
+        <label>
+          Precio
+          <input type="number" name="precio" step="0.01" min="0.01" required />
+        </label>
+      </div>
+
+      <label>
+        Descripción
+        <textarea name="descripcion" rows="3" required></textarea>
+      </label>
+
+      <button type="submit">Guardar producto</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Registrar variante</h2>
+    <form method="post">
+      <input type="hidden" name="tipo" value="variante" />
+
+      <div class="form-grid">
+        <label>
+          Producto
+          <select name="producto_id" required>
+            <option value="">Selecciona un producto</option>
+            {% for producto in productos %}
+              <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label>
+          Talla
+          <input type="text" name="talla" required />
+        </label>
+
+        <label>
+          Color
+          <input type="text" name="color" required />
+        </label>
+
+        <label>
+          Cantidad inicial
+          <input type="number" name="cantidad_inicial" min="0" value="0" required />
+        </label>
+
+        <label>
+          Stock mínimo
+          <input type="number" name="stock_minimo" min="0" value="0" />
+        </label>
+      </div>
+
+      <button type="submit">Guardar variante</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Productos registrados</h2>
+    {% if productos %}
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Variantes</th>
+            <th>Stock total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in productos %}
+            <tr>
+              <td>
+                <strong>{{ producto.nombre }}</strong><br />
+                <small>{{ producto.descripcion }}</small>
+              </td>
+              <td>{{ producto.categoria }}</td>
+              <td>${{ '%.2f'|format(producto.precio) }}</td>
+              <td>
+                {% if producto.variantes %}
+                  {% for variante in producto.variantes %}
+                    <span>{{ variante.talla }} / {{ variante.color }}: {{ variante.stock_actual }}</span><br />
+                  {% endfor %}
+                {% else %}
+                  Sin variantes
+                {% endif %}
+              </td>
+              <td>{{ producto.stock_total }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No hay productos registrados todavía.</p>
+    {% endif %}
+  </section>
+{% endblock %}

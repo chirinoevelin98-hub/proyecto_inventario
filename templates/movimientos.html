@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="panel">
+    <h2>Registrar movimiento</h2>
+
+    <div class="movement-layout">
+      <form method="post">
+        <div class="form-grid">
+          <label>
+            Variante
+            <select name="variante_id" required>
+              <option value="">Selecciona una variante</option>
+              {% for variante in variantes %}
+                <option value="{{ variante.id }}">
+                  {{ variante.producto }} - {{ variante.talla }} / {{ variante.color }}
+                  (stock: {{ variante.stock_actual }})
+                </option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <label>
+            Tipo de movimiento
+            <select name="tipo" required>
+              <option value="entrada">Entrada</option>
+              <option value="salida">Salida</option>
+            </select>
+          </label>
+
+          <label>
+            Cantidad
+            <input type="number" name="cantidad" min="1" required />
+          </label>
+
+          <label>
+            Motivo
+            <input type="text" name="motivo" placeholder="Compra, venta, ajuste..." />
+          </label>
+        </div>
+
+        <button type="submit">Guardar movimiento</button>
+      </form>
+
+      <div>
+        <h3>Alertas actuales</h3>
+        {% if alertas %}
+          {% for alerta in alertas %}
+            <div class="alert-box">
+              {{ alerta.nombre }} - {{ alerta.talla }} / {{ alerta.color }}
+              tiene {{ alerta.stock_actual }} unidades y el mínimo es {{ alerta.stock_minimo }}.
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="alert-box success-box">
+            Sin alertas de stock bajo.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Historial de movimientos</h2>
+
+    {% if historial %}
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Variante</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for movimiento in historial %}
+            <tr>
+              <td>{{ movimiento.fecha }}</td>
+              <td>{{ movimiento.producto }}</td>
+              <td>{{ movimiento.talla }} / {{ movimiento.color }}</td>
+              <td>
+                {% if movimiento.tipo == 'entrada' %}
+                  <span class="status-ok">Entrada</span>
+                {% else %}
+                  <span class="status-alert">Salida</span>
+                {% endif %}
+              </td>
+              <td>{{ movimiento.cantidad }}</td>
+              <td>{{ movimiento.detalle }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Aún no hay movimientos registrados.</p>
+    {% endif %}
+  </section>
+{% endblock %}

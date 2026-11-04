@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <section class="panel">
+    <h2>Resumen del inventario</h2>
+    <div class="cards">
+      <div class="card">
+        <span>Total de productos</span>
+        <strong>{{ resumen.total_productos }}</strong>
+      </div>
+      <div class="card">
+        <span>Total de variantes</span>
+        <strong>{{ resumen.total_variantes }}</strong>
+      </div>
+      <div class="card accent">
+        <span>Unidades en stock</span>
+        <strong>{{ resumen.stock_total }}</strong>
+      </div>
+    </div>
+  </section>
+{% endblock %}
